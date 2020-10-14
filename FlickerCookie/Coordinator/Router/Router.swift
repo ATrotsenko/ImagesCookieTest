@@ -23,6 +23,7 @@ class Router: NSObject, RouterProtocol {
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         super.init()
+        self.navigationController.delegate = self
     }
     
     func push(_ drawable: Drawable, isAnimated: Bool, onNavigateBack closure: NavigationBackClosure?) {
@@ -53,4 +54,16 @@ protocol Drawable {
 
 extension UIViewController: Drawable {
     var viewController: UIViewController? { return self }
+}
+
+extension Router : UINavigationControllerDelegate {
+
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+
+        guard let previousController = navigationController.transitionCoordinator?.viewController(forKey: .from),
+            !navigationController.viewControllers.contains(previousController) else {
+                return
+        }
+        executeClosure(previousController)
+    }
 }

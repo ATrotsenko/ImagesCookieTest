@@ -18,4 +18,8 @@ class BaseViewController: UIViewController {
             view.backgroundColor = .white
         }
     }
+    
+    deinit {
+        debugPrint(String(describing: self), " deinited")
+    }
 }
